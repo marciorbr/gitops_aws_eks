@@ -16,7 +16,7 @@ module "eks_control_plane" {
     helm    = helm.control_plane
   }
 
-  source                   = "github.com/marciorbr/terraform-aws-eks.git?ref=v1.3.0"
+  source                   = "github.com/marciorbr/terraform-aws-eks.git?ref=v1.4.1"
   k8s_version              = local.k8s_version_control_plane
   project_name             = local.project_name_control_plane
   environment              = local.environment
@@ -33,6 +33,8 @@ module "eks_control_plane" {
 
   enable_aws_lb_controller = true
 
+  enable_efs_csi = true
+
   enable_nginx_controller_with_nlb_target_group_bind = true
 }
 
@@ -43,7 +45,7 @@ module "eks_worker_01" {
     helm    = helm.worker_01
   }
 
-  source                   = "github.com/marciorbr/terraform-aws-eks.git?ref=v1.3.0"
+  source                   = "github.com/marciorbr/terraform-aws-eks.git?ref=v1.4.1"
   k8s_version              = local.k8s_version_worker_01
   project_name             = local.project_name_worker_01
   environment              = local.environment

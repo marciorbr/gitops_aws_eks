@@ -1,0 +1,11 @@
+adminUser: admin
+adminPassword: adminPassword        
+        
+persistence:
+    enabled: true
+    size: 10Gi
+    storageClassName: dynamic-efs-sc
+service:
+    type: NodePort
+initChownData:
+    enabled: false
