@@ -6,9 +6,9 @@ metadata:
 spec:
   description: Project for observability applications
   sourceRepos:
-    - https://github.com/marciorbr/gitops_aws_eks.git
+    - '*'
   destinations:
-    - namespace: observability
+    - namespace: '*'
       server: '*'
   clusterResourceWhitelist:
     - group: '*'
