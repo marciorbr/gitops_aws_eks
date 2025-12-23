@@ -12,6 +12,6 @@ ingress:
     enabled: true
     ingressClassName: nginx
     hosts:
-      - host: grafana.customer.com.br
+      - grafana.customer.com.br
 initChownData:
     enabled: false
