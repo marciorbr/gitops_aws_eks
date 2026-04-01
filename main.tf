@@ -16,7 +16,7 @@ module "eks_control_plane" {
     helm    = helm.control_plane
   }
 
-  source                   = "github.com/marciorbr/terraform-aws-eks.git?ref=v1.4.1"
+  source                   = "github.com/marciorbr/terraform-aws-eks.git?ref=v1.4.2"
   k8s_version              = local.k8s_version_control_plane
   project_name             = local.project_name_control_plane
   environment              = local.environment
@@ -25,8 +25,8 @@ module "eks_control_plane" {
   vpc_id                   = module.vpc.vpc_id
   on_demand_instance_types = ["t3.medium", "t3a.medium"]
   on_demand_auto_scale_options = {
-    desired = 3
-    max     = 4
+    desired = 2
+    max     = 2
     min     = 1
   }
   addons = ["eks-pod-identity-agent", "vpc-cni", "kube-proxy", "coredns"]
@@ -45,7 +45,7 @@ module "eks_worker_01" {
     helm    = helm.worker_01
   }
 
-  source                   = "github.com/marciorbr/terraform-aws-eks.git?ref=v1.4.1"
+  source                   = "github.com/marciorbr/terraform-aws-eks.git?ref=v1.4.2"
   k8s_version              = local.k8s_version_worker_01
   project_name             = local.project_name_worker_01
   environment              = local.environment
@@ -55,7 +55,7 @@ module "eks_worker_01" {
   on_demand_instance_types = ["t3.medium", "t3a.medium"]
   on_demand_auto_scale_options = {
     desired = 2
-    max     = 4
+    max     = 2
     min     = 1
   }
   addons = ["eks-pod-identity-agent", "vpc-cni", "kube-proxy", "coredns"]
