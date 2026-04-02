@@ -55,11 +55,11 @@ locals {
   ]
 
   # EKS Control Plane Configuration
-  k8s_version_control_plane  = "1.33"
+  k8s_version_control_plane  = "1.34"
   project_name_control_plane = "control-plane"
 
   # EKS Worker 01 Configuration
-  k8s_version_worker_01  = "1.33"
+  k8s_version_worker_01  = "1.34"
   project_name_worker_01 = "worker-01"
 
 }
