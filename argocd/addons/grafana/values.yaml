@@ -15,3 +15,21 @@ ingress:
       - grafana.customer.com.br
 initChownData:
     enabled: false
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Loki
+        type: loki
+        access: proxy
+        url: http://loki.customer.local
+        isDefault: false
+        jsonData:
+          maxLines: 1000
+          derivedFields:
+          - datasourceName: Tempo
+            datasourceUid: Tempo
+            matcherRegex: '\\"traceID\\":\\"([^\\"]+)\\"'
+            name: traceID
+            url: $$${__value.raw}
