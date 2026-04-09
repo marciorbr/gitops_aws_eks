@@ -1,7 +1,6 @@
 # LOKI CHUNKS - DATA
 
 resource "aws_s3_bucket" "loki-chunks" {
-#   bucket = format("%s-%s-loki-chunks", var.project_name, data.aws_caller_identity.current.account_id)
   bucket = "eks-loki-chunks-${local.project_name_control_plane}"
 }
 

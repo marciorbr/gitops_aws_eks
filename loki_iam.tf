@@ -47,7 +47,7 @@ resource "aws_iam_policy" "loki_policy" {
   name        = "eks-loki-policy-${local.project_name_control_plane}"
   path        = "/"
   description = local.project_name_control_plane
-  policy = data.aws_iam_policy_document.loki_policy.json
+  policy      = data.aws_iam_policy_document.loki_policy.json
 }
 
 resource "aws_iam_policy_attachment" "loki" {
