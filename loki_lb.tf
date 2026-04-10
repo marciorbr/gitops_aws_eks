@@ -44,12 +44,12 @@ YAML
   depends_on = [
     module.eks_control_plane
   ]
-  
+
 }
 
 resource "kubectl_manifest" "loki" {
   yaml_body = <<YAML
-apiVersion: elbv2.k8s.aws/v1alpha1
+apiVersion: elbv2.k8s.aws/v1beta1
 kind: TargetGroupBinding
 metadata:
   name: loki-gateway
@@ -62,6 +62,6 @@ spec:
   targetType: instance
 YAML
   depends_on = [
-    module.eks_control_plane
+    kubectl_manifest.loki_namespace
   ]
 }
