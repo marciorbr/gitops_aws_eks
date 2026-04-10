@@ -1,0 +1,8 @@
+nodeSelector: {}
+replicaCount: 1
+
+installCRDs: true
+
+serviceAccount:
+  create: true
+  name: external-secrets
