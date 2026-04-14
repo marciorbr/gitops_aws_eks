@@ -12,5 +12,5 @@ resource "aws_route53_record" "loki" {
   name    = "loki.customer.local"
   type    = "CNAME"
   ttl     = "30"
-  records = [aws_lb.loki.dns_name]
+  records = [module.loki.aws_nlb_dns]
 }

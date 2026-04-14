@@ -111,3 +111,84 @@ module "eks_worker_01" {
 
   enable_nginx_controller_with_nlb_target_group_bind = false
 }
+
+module "loki" {
+  source = "./modules/loki-infrastructure"
+
+  project_name        = local.project_name_control_plane
+  cluster_name        = module.eks_control_plane.eks_cluster_name
+  vpc_id              = module.vpc.vpc_id
+  private_subnets_ids = module.vpc.private_subnets_ids
+}
+
+module "external_secrets_control_plane" {
+  source = "./modules/external-secrets"
+
+  project_name = local.project_name_control_plane
+  region       = local.region
+  cluster_name = module.eks_control_plane.eks_cluster_name
+}
+
+module "efs_storage_control_plane" {
+  source = "./modules/efs-storage"
+
+  project_name          = local.project_name_control_plane
+  private_subnets_ids   = module.vpc.private_subnets_ids
+  efs_security_group_id = module.eks_control_plane.efs_security_group_id
+}
+
+
+resource "kubectl_manifest" "loki_namespace" {
+  yaml_body = <<YAML
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: loki
+YAML
+  depends_on = [
+    module.eks_control_plane
+  ]
+}
+
+resource "kubectl_manifest" "loki" {
+  yaml_body = <<YAML
+apiVersion: elbv2.k8s.aws/v1beta1
+kind: TargetGroupBinding
+metadata:
+  name: loki-gateway
+  namespace: loki
+spec:
+  serviceRef:
+    name: loki-gateway
+    port: 80
+  targetGroupARN: ${module.loki.aws_nlb_target_group_arn}
+  targetType: instance
+YAML
+  depends_on = [
+    kubectl_manifest.loki_namespace
+  ]
+}
+
+resource "kubectl_manifest" "dynamic_efs_storage_class" {
+
+  provider = kubectl.control_plane
+
+  yaml_body = <<YAML
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: dynamic-efs-sc
+provisioner: efs.csi.aws.com
+parameters:
+  provisioningMode: efs-ap
+  fileSystemId: ${module.efs_storage_control_plane.aws_efs_file_system_id}
+  subPathPattern: "$${.PVC.name}"
+  directoryPerms: "777"
+reclaimPolicy: Retain
+volumeBindingMode: WaitForFirstConsumer
+YAML
+
+  depends_on = [
+    module.efs_storage_control_plane
+  ]
+}
